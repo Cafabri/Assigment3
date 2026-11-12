@@ -22,6 +22,7 @@ BD_Individual_Assignments_2026_2027.pdf
 # Runner console log and temporary verification matrices
 results/run_log.txt
 results/verify_tmp/
+results/smoke/
 
 # OS files
 .DS_Store

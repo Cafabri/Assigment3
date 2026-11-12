@@ -123,10 +123,12 @@ static int64_t memory_limit(void) {
     return s ? strtoll(s, NULL, 10) : DEFAULT_MEMORY_LIMIT;
 }
 
-/* Creates the inputs outside every timed region; for a parallel method, applies the
-   placement and checks (also outside the timer) that a parallel region really has the
-   requested number of threads. This first region also starts the threads of the OpenMP
-   runtime, so their creation is not part of any timed run. */
+/* Creates the inputs outside every timed region, applies the placement and checks (also
+   outside the timer) that a parallel region really has the requested number of threads.
+   This first region also starts the threads of the OpenMP runtime, so their creation is
+   not part of any timed run. A sequential method runs on the main thread, which is OpenMP
+   thread 0 of that region, so it is pinned to the same processor as thread 0 of a
+   parallel method. */
 static void setup(bench_t *b, const char *method, int n, int bs, int threads,
                   const char *cpus_arg) {
     memset(b, 0, sizeof(*b));
@@ -148,14 +150,12 @@ static void setup(bench_t *b, const char *method, int n, int bs, int threads,
                 memory_limit());
         exit(3);
     }
-    if (is_parallel(b->method)) {
-        int cpus[MAX_THREADS], seen[MAX_THREADS];
-        set_thread_placement(cpus, parse_cpus(cpus_arg, cpus));
-        int team = observe_placement(threads, seen);
-        if (team != threads) {
-            fprintf(stderr, "Team of %d threads instead of %d\n", team, threads);
-            exit(1);
-        }
+    int cpus[MAX_THREADS], seen[MAX_THREADS];
+    set_thread_placement(cpus, parse_cpus(cpus_arg, cpus));
+    int team = observe_placement(threads, seen);
+    if (team != threads) {
+        fprintf(stderr, "Team of %d threads instead of %d\n", team, threads);
+        exit(1);
     }
     b->A = alloc_matrix(n);
     b->B = alloc_matrix(n);
