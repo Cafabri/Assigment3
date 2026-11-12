@@ -399,7 +399,8 @@ def table_variability(summary):
                      f"{int(d['batch_size'].min())}--{int(d['batch_size'].max())} & "
                      f"{d['iqr_over_median_pct'].median():.2f} & "
                      f"{d['iqr_over_median_pct'].max():.2f} "
-                     f"({worst['method']}, {worst['build']}, p = {int(worst['threads'])}) \\\\")
+                     f"(\\texttt{{{worst['method'].replace('_', chr(92) + '_')}}}, "
+                     f"{worst['build']}, $p = {int(worst['threads'])}$) \\\\")
     write_table("variability.tex", lines)
 
 

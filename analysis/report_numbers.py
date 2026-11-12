@@ -107,6 +107,13 @@ def main():
             say(f"{build} ikj n = {n}: GFLOP/s at p = 8 {one(g, 'gflops', threads=8):.1f}, "
                 f"p = 16 {one(g, 'gflops', threads=16):.1f}")
 
+    say("\n== Karp-Flatt serial fraction e(p), scalar build")
+    for kernel in ["ikj", "blocked"]:
+        for n in [1000, 2000, 4000]:
+            g = th[(th["build"] == "scalar") & (th["kernel"] == kernel) & (th["n"] == n)]
+            say(f"{kernel} n = {n}: " + " ".join(
+                f"p={p}:{one(g, 'karp_flatt', threads=p):.4f}" for p in [2, 4, 6, 8, 12, 16]))
+
     say("\n== Superlinear points: S(p) > p with the lower bootstrap bound above p")
     sup = th[(th["speedup_lo"] > th["threads"]) & (th["threads"] > 1)]
     for _, r in sup.iterrows():
