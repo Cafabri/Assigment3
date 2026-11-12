@@ -1,0 +1,28 @@
+# Claude Code local config
+.claude/
+
+# C compiled binaries
+*.exe
+*.o
+
+# LaTeX auxiliary files
+*.aux
+*.log
+*.out
+*.toc
+*.synctex.gz
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Assignment brief (kept only as a local reference)
+BD_Individual_Assignments_2026_2027.pdf
+
+# Runner console log and temporary verification matrices
+results/run_log.txt
+results/verify_tmp/
+
+# OS files
+.DS_Store
+Thumbs.db
